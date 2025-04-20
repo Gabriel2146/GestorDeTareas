@@ -1,54 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Tarea</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container">
-    <h1 class="mt-5">Editar Tarea</h1>
-    <form method="POST">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="description" class="form-label">Descripción</label>
-            <input type="text" name="description" id="description" class="form-control" value="{{ form.instance.description }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="date_start" class="form-label">Fecha de Inicio</label>
-            <input type="date" name="date_start" id="date_start" class="form-control" value="{{ form.instance.date_start }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="estimate_time" class="form-label">Tiempo Estimado (días)</label>
-            <input type="number" name="estimate_time" id="estimate_time" class="form-control" value="{{ form.instance.estimate_time }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="status" class="form-label">Estado</label>
-            <input type="text" name="status" id="status" class="form-control" value="{{ form.instance.status }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="employee_id" class="form-label">Empleado</label>
-            <select name="employee_id" id="employee_id" class="form-control" required>
-                {% for employee in employees %}
-                    <option value="{{ employee.id }}" {% if employee.id == form.instance.id_employee.id %} selected {% endif %}>
-                        {{ employee.first_name }} {{ employee.last_name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="project_id" class="form-label">Proyecto</label>
-            <select name="project_id" id="project_id" class="form-control" required>
-                {% for project in projects %}
-                    <option value="{{ project.id }}" {% if project.id == form.instance.id_project.id %} selected {% endif %}>
-                        {{ project.name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Actualizar Tarea</button>
-    </form>
-</div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Editar Tarea</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Actualizar Tarea</button>
+</form>
+
+{% endblock %}

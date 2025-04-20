@@ -1,22 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Proyecto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container">
-    <h1 class="mt-5">Editar Proyecto</h1>
-    <form method="POST">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="name" class="form-label">Nombre del Proyecto</label>
-            <input type="text" name="name" id="name" class="form-control" value="{{ form.instance.name }}" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Actualizar Proyecto</button>
-    </form>
-</div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Editar Proyecto</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Actualizar Proyecto</button>
+</form>
+
+{% endblock %}
