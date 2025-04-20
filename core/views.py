@@ -7,26 +7,49 @@ from datetime import datetime, timedelta  # Asegúrate de importar timedelta
 # Vista principal para generar el reporte de tareas
 def index(request):
     tasks = []
+    date_start = None
+    date_end = None
+
     if request.method == 'POST':
+        # Obtener las fechas de inicio y fin desde el formulario
         date_start = request.POST.get('date_start')
         date_end = request.POST.get('date_end')
 
         # Convertir las fechas de string a datetime
         try:
-            date_start = datetime.strptime(date_start, '%Y-%m-%d').date()
-            date_end = datetime.strptime(date_end, '%Y-%m-%d').date()
+            if date_start:
+                date_start = datetime.strptime(date_start, '%Y-%m-%d').date()
+            if date_end:
+                date_end = datetime.strptime(date_end, '%Y-%m-%d').date()
         except ValueError:
             return HttpResponse('Fecha no válida', status=400)
 
-        # Obtener las tareas dentro del rango de fechas y en progreso
-        tasks = Task.objects.filter(date_start__gte=date_start, date_start__lte=date_end, status="In Progress")
+        # Depuración: Imprimir las fechas para asegurarse de que se están recibiendo correctamente
+        print(f"Fecha de inicio: {date_start}")
+        print(f"Fecha de fin: {date_end}")
+
+        # Obtener las tareas dentro del rango de fechas y con estado "En Progreso"
+        tasks = Task.objects.filter(date_start__gte=date_start, date_start__lte=date_end, status="En Progreso")
+
+        # Depuración: Imprimir las tareas obtenidas
+        print(f"Tareas obtenidas: {tasks}")
 
         # Calcular las fechas estimadas de finalización y el retraso de cada tarea
         for task in tasks:
-            task.estimated_end_date = task.date_start + timedelta(days=task.estimate_time)
-            task.delay = (datetime.today().date() - task.estimated_end_date).days
+            # Calcula la fecha estimada de finalización
+            estimated_end_date = task.date_start + timedelta(days=task.estimate_time)
+            # Calcula el retraso (si hay alguno)
+            delay = (datetime.today().date() - estimated_end_date).days
+            # Agregar estos valores como atributos dinámicos
+            task.estimated_end_date = estimated_end_date
+            task.delay = delay
 
-    return render(request, 'index.html', {'tasks': tasks})
+    # Mostrar las tareas en el contexto
+    return render(request, 'index.html', {
+        'tasks': tasks,
+        'date_start': date_start,
+        'date_end': date_end
+    })
 
 
 # Vista para manejar empleados
