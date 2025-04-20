@@ -3,6 +3,13 @@
 {% block content %}
 <h2 class="my-4">Gestión de Tareas</h2>
 
+<!-- Menú de navegación -->
+<div class="btn-group mb-4" role="group" aria-label="Basic example">
+    <a href="{% url 'empleados' %}" class="btn btn-primary">Empleados</a>
+    <a href="{% url 'proyectos' %}" class="btn btn-primary">Proyectos</a>
+    <a href="{% url 'tareas' %}" class="btn btn-primary">Tareas</a>
+</div>
+
 <!-- Formulario para agregar una nueva tarea -->
 <div class="card mb-4">
     <div class="card-header">
@@ -11,6 +18,98 @@
     <div class="card-body">
         <form method="POST">
             {% csrf_token %}
+            
+            <!-- Descripción de la tarea -->
             <div class="form-group">
                 <label for="description">Descripción</label>
-                <input type="text" class="form-control" id="description" name="description" required
+                <input type="text" class="form-control" id="description" name="description" placeholder="Descripción de la tarea" required>
+            </div>
+
+            <!-- Fecha de inicio -->
+            <div class="form-group">
+                <label for="date_start">Fecha de Inicio</label>
+                <input type="date" class="form-control" id="date_start" name="date_start" required>
+            </div>
+
+            <!-- Tiempo estimado -->
+            <div class="form-group">
+                <label for="estimate_time">Tiempo Estimado (días)</label>
+                <input type="number" class="form-control" id="estimate_time" name="estimate_time" placeholder="Tiempo estimado en días" required>
+            </div>
+
+            <!-- Estado de la tarea -->
+            <div class="form-group">
+                <label for="status">Estado</label>
+                <select class="form-control" id="status" name="status" required>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="En Progreso">En Progreso</option>
+                    <option value="Completada">Completada</option>
+                </select>
+            </div>
+
+            <!-- Selección de Empleado -->
+            <div class="form-group">
+                <label for="id_employee">Empleado</label>
+                <select class="form-control" id="id_employee" name="id_employee" required>
+                    <option value="" disabled selected>Seleccione un empleado</option>
+                    {% for employee in employees %}
+                        <option value="{{ employee.id }}">{{ employee.first_name }} {{ employee.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Selección de Proyecto -->
+            <div class="form-group">
+                <label for="id_project">Proyecto</label>
+                <select class="form-control" id="id_project" name="id_project" required>
+                    <option value="" disabled selected>Seleccione un proyecto</option>
+                    {% for project in projects %}
+                        <option value="{{ project.id }}">{{ project.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Agregar Tarea</button>
+        </form>
+    </div>
+</div>
+
+<!-- Lista de tareas -->
+<h3>Lista de Tareas</h3>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Empleado</th>
+                <th>Proyecto</th>
+                <th>Fecha de Inicio</th>
+                <th>Tiempo Estimado (días)</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.id_employee.first_name }} {{ task.id_employee.last_name }}</td>
+                    <td>{{ task.id_project.name }}</td>
+                    <td>{{ task.date_start }}</td>
+                    <td>{{ task.estimate_time }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>
+                        <a href="{% url 'editar_tarea' task.id %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'eliminar_tarea' task.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No hay tareas registradas.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

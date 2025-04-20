@@ -19,10 +19,11 @@ class Task(models.Model):
     id_project = models.ForeignKey(Project, on_delete=models.CASCADE)
     description = models.CharField(max_length=255)
     date_start = models.DateField()
-    estimate_time = models.IntegerField()
+    estimate_time = models.IntegerField()  # Tiempo estimado en días
     status = models.CharField(max_length=50)
 
     def estimated_end(self):
+        # Método para calcular la fecha estimada de finalización
         return self.date_start + timedelta(days=self.estimate_time)
 
     def __str__(self):

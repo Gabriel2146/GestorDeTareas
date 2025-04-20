@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Employee, Project, Task
 from .forms import EmployeeForm, ProjectForm, TaskForm
-from datetime import datetime
+from datetime import datetime, timedelta  # Asegúrate de importar timedelta
 
 # Vista principal para generar el reporte de tareas
 def index(request):
@@ -108,6 +108,9 @@ def eliminar_proyecto(request, id):
 # Vista para manejar tareas
 def tareas(request):
     tasks = Task.objects.all()
+    employees = Employee.objects.all()  # Asegúrate de pasar los empleados
+    projects = Project.objects.all()  # Asegúrate de pasar los proyectos
+
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -118,13 +121,18 @@ def tareas(request):
 
     return render(request, 'tareas.html', {
         'tasks': tasks,
-        'form': form
+        'form': form,
+        'employees': employees,  # Pasar empleados al template
+        'projects': projects,  # Pasar proyectos al template
     })
 
 
 # Vista para editar tarea
 def editar_tarea(request, id):
     task = get_object_or_404(Task, id=id)
+    employees = Employee.objects.all()  # Pasar empleados disponibles para la tarea
+    projects = Project.objects.all()  # Pasar proyectos disponibles para la tarea
+
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
@@ -133,7 +141,12 @@ def editar_tarea(request, id):
     else:
         form = TaskForm(instance=task)
 
-    return render(request, 'edit_task.html', {'form': form, 'task': task})
+    return render(request, 'edit_task.html', {
+        'form': form,
+        'task': task,
+        'employees': employees,  # Pasar empleados al template
+        'projects': projects,  # Pasar proyectos al template
+    })
 
 
 # Vista para eliminar tarea

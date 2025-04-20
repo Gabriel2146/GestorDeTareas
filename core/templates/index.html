@@ -1,47 +1,48 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Generar Reporte de Tareas</h2>
+<h2>Reporte de Tareas</h2>
 
+<!-- Formulario para ingresar fechas -->
 <form method="POST">
     {% csrf_token %}
     <div class="form-group">
         <label for="date_start">Fecha de inicio</label>
-        <input type="date" class="form-control" id="date_start" name="date_start" required>
+        <input type="date" id="date_start" name="date_start" class="form-control" required>
     </div>
     <div class="form-group">
         <label for="date_end">Fecha de fin</label>
-        <input type="date" class="form-control" id="date_end" name="date_end" required>
+        <input type="date" id="date_end" name="date_end" class="form-control" required>
     </div>
-    <button type="submit" class="btn btn-primary">Generar Reporte</button>
+    <button type="submit" class="btn btn-primary">Generar reporte</button>
 </form>
 
 {% if tasks %}
-    <h3>Reporte de Tareas</h3>
+    <h3>Lista de Tareas</h3>
     <table class="table mt-3">
         <thead>
             <tr>
                 <th>Descripción</th>
-                <th>Empleado</th>
-                <th>Proyecto</th>
+                <th>Estado</th>
                 <th>Fecha de Inicio</th>
-                <th>Fecha Estimada de Fin</th>
+                <th>Fecha Estimada de Finalización</th>
                 <th>Retraso (días)</th>
             </tr>
         </thead>
         <tbody>
             {% for task in tasks %}
-                <tr>
-                    <td>{{ task.description }}</td>
-                    <td>{{ task.id_employee.first_name }} {{ task.id_employee.last_name }}</td>
-                    <td>{{ task.id_project.name }}</td>
-                    <td>{{ task.date_start }}</td>
-                    <td>{{ task.estimated_end_date }}</td>
-                    <td>{{ task.delay }}</td>
-                </tr>
+            <tr>
+                <td>{{ task.description }}</td>
+                <td>{{ task.status }}</td>
+                <td>{{ task.date_start }}</td>
+                <td>{{ task.estimated_end_date }}</td>
+                <td>{{ task.delay }}</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
+{% else %}
+    <p>No se encontraron tareas para el rango de fechas seleccionado.</p>
 {% endif %}
 
 {% endblock %}
