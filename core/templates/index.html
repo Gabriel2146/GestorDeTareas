@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Tareas - Reporte</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Generar Reporte de Tareas</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="date_start" class="form-label">Fecha de Inicio</label>
+            <input type="date" name="date_start" id="date_start" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="date_end" class="form-label">Fecha de Fin</label>
+            <input type="date" name="date_end" id="date_end" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Generar Reporte</button>
+    </form>
+
+    {% if task_report %}
+        <h2 class="mt-5">Reporte de Tareas</h2>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>ID Tarea</th>
+                    <th>Descripción</th>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha Estimada de Fin</th>
+                    <th>Demora</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in task_report %}
+                    <tr>
+                        <td>{{ report.task.id }}</td>
+                        <td>{{ report.task.description }}</td>
+                        <td>{{ report.task.date_start }}</td>
+                        <td>{{ report.estimated_end }}</td>
+                        <td>{{ report.delay.days }} días</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+</body>
+</html>

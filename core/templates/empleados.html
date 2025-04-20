@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Tareas - Empleados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Lista de Empleados</h1>
+    <a href="{% url 'empleados' %}" class="btn btn-primary">Agregar Empleado</a>
+    <ul class="list-group mt-3">
+        {% for employee in employees %}
+            <li class="list-group-item">
+                {{ employee.first_name }} {{ employee.last_name }}
+                <a href="{% url 'eliminar_empleado' employee.id %}" class="btn btn-danger btn-sm float-end">Eliminar</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>

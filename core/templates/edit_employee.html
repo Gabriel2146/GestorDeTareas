@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Empleado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Editar Empleado</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="first_name" class="form-label">Nombre</label>
+            <input type="text" name="first_name" id="first_name" class="form-control" value="{{ form.instance.first_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Apellido</label>
+            <input type="text" name="last_name" id="last_name" class="form-control" value="{{ form.instance.last_name }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar Empleado</button>
+    </form>
+</div>
+</body>
+</html>
